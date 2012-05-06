@@ -4,21 +4,55 @@
  
 /*global define: true */
 
+/**
+ * MathEngine
+ *
+ * The MathEngine stores a single statement and provides methods to
+ * store that statement, print it and evaluate it.
+ */
+
 define(
   [],
   function () {
     // Return a function so that the 'new' operator can be used.
     return function () {
-    	// Input parsing regular expressions.
-    	var validator = /^$/;
-    	// Private functions.
+      // The current active statement.
+      // @TODO this will eventually be an array.
+      var statement = '';
+      // Input parsing regular expression.
+      var validator = /^$/;
+      // Private functions.
+      /**
+       * Parse the user-provided string so that it can be
+       * evaluated as a mathematic statement.
+       */
       function interpret(input) {
-      	return a = validator.exec(input);
+        statement = validator.exec(input);
       }
-      // Return an object of public methods for the engine.
+      /**
+       * Execute the mathematic operations on the numbers
+       * represented in the current stored statement.
+       */
+      function evaluate(statement) {
+        // For now just return the statement until processing
+        // is in place.
+        return statement;
+      }
+      // Public methods.
       return {
-        calculate: function (input) {
-        	return interpret(input);
+        // Save the input as an interpreted statement.
+        record: function (input) {
+          interpret(input);
+        },
+        // Return the current stored statement.
+        // @TODO This requires an implode when the statement
+        // is eventually stored as an array.
+        check: function () {
+          return statement;
+        },
+        // Evaluate the current stored statement.
+        calculate: function () {
+          return evaluate(statement);
         }
       };
     };

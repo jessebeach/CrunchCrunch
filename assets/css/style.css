@@ -225,7 +225,7 @@ body {
 	box-shadow: 0 0 -3px 2px #d8d8d8 inset, 1px 1px 0px 1px #999 inset;
 	float: left;
 }
-.calculator input {
+.calculator .display {
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
