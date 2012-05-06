@@ -39,7 +39,7 @@ function ($, MathEngine) {
   var engine = new MathEngine();
   /* DEVELOPING THE MATH ENGINE INPUT HANDLING */
   // Calculate the current active statement.
-  console.log("MathEngine calculate: " + engine.calculate('11 * 3.13333'));
+  console.log("MathEngine calculate: " + engine.calculate('3 * 3 + 3 * 3 - 8 + 2'));
   // Print the current active statement.
   console.log("MathEngine check: " + engine.check());
   /**

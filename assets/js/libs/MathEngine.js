@@ -86,8 +86,28 @@ define(
        * represented in the current stored statement.
        */
       function evaluate(statement) {
-        // Walk through the array. 
-        return operate(statement[1], statement[0], statement[2]);
+        var i = 1,
+        nums = [],
+        // Slice the statement to get a copy of it.
+        result = statement.slice(0, statement.length);
+        // Evaluate all the multiplication and division first.
+        while (i < result.length) {
+          // Check for multiplication or division.
+          if (/[\*\\]/.exec(result[i])) {
+            // We move through each triplet in the array and evaluate.
+            result.splice((i - 1), 3, operate(result[i], result[i - 1], result[i + 1]));
+          }
+          // If the operator isn't multiplication or division, move to the next triplet.
+          else {
+            i += 2;
+          }
+        }
+        // Evaluate the addition and subtraction.
+        i = 1;
+        while (i < result.length) {
+          result.splice((i - 1), 3, operate(result[i], result[i - 1], result[i + 1]));
+        }
+        return result;
       }
       /**
        * Verify that the statement has the correct structure for evaluation.
