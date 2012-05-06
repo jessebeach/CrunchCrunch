@@ -18,25 +18,66 @@ define(
     return function () {
       // The current active statement.
       // @TODO this will eventually be an array.
-      var statement = '';
+      var statement = [];
       // Input parsing regular expression.
-      var validator = /^$/;
+      // [0-9]+\.{0,1}[0-9]* matches integers and decimals.
+      // [\/\*\+\-\(\)] matches operators and parentheses.
+      // the g flag is necessary to allow looping through the input with //.exec()
+      var chunker = /[0-9]+\.{0,1}[0-9]*|[\/\*\+\-\(\)]/g;
+      // Integer vs. float parser. Returns a result for a float.
+      var floatCheck = /[0-9]+\.{1}[0-9]+/;
       // Private functions.
+      function operate(operation, a, b) {
+        var i, nums = [a, b];
+        // Create Numbers from the String arguments.
+        for (i = 0; i < nums.length; i++ ) {
+          // Create a float or int depending on the floatCheck result.
+          nums[i] = (floatCheck.exec(nums[i])) ? parseFloat(nums[i]) : parseInt(nums[i]);
+        }
+        var result;
+        switch (operation) {
+        case '+':
+          result = nums[0] + nums[1];
+          break;
+        case '-':
+          result = nums[0] - nums[1];
+          break;
+        case '*':
+          result = nums[0] * nums[1];
+          break;
+        case '/':
+          if (b.indexOf('0') === 0) {
+            result = NaN;
+          }
+          result = nums[0] / nums[1];
+          break;
+        default:
+          result = NaN;
+          break;
+        }
+        return result;
+          
+      }
       /**
        * Parse the user-provided string so that it can be
        * evaluated as a mathematic statement.
        */
       function interpret(input) {
-        statement = validator.exec(input);
+      	var item, i = 0;
+        // Loop through the regex exec function. input.length prevents the
+        // while loop from executing for longer than the input is long.
+        while ((item = chunker.exec(input)) && i < input.length) {
+          statement.push(item[0]);
+          i++;
+        }
       }
       /**
        * Execute the mathematic operations on the numbers
        * represented in the current stored statement.
        */
       function evaluate(statement) {
-        // For now just return the statement until processing
-        // is in place.
-        return statement;
+        // Walk through the array. 
+        return operate(statement[1], statement[0], statement[2]);
       }
       // Public methods.
       return {
@@ -44,11 +85,9 @@ define(
         record: function (input) {
           interpret(input);
         },
-        // Return the current stored statement.
-        // @TODO This requires an implode when the statement
-        // is eventually stored as an array.
+        // Return the current stored statement as a string.
         check: function () {
-          return statement;
+          return statement.join(" ");
         },
         // Evaluate the current stored statement.
         calculate: function () {
