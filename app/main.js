@@ -38,12 +38,10 @@ function ($, MathEngine) {
   // Instantiate a new MathEngine.
   var engine = new MathEngine();
   /* DEVELOPING THE MATH ENGINE INPUT HANDLING */
-  // Send a statement to the engine.
-  engine.record('11 * 3.13333');
+  // Calculate the current active statement.
+  console.log("MathEngine calculate: " + engine.calculate('11 * 3.13333'));
   // Print the current active statement.
   console.log("MathEngine check: " + engine.check());
-  // Calculate the current active statement.
-  console.log("MathEngine calculate: " + engine.calculate());
   /**
    * Number pad handler.
    */

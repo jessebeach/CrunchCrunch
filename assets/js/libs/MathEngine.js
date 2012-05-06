@@ -89,18 +89,35 @@ define(
         // Walk through the array. 
         return operate(statement[1], statement[0], statement[2]);
       }
+      /**
+       * Verify that the statement has the correct structure for evaluation.
+       *
+       * @TODO, For now, just return true.
+       */
+      function verify(statement) {
+        return true;
+      }
+      /**
+       * Error handling.
+       *
+       * This has the potential to be more robust.
+       */
+      function error(message) {
+        return "Error: " + message;
+      }
       // Public methods.
       return {
-        // Save the input as an interpreted statement.
-        record: function (input) {
-          interpret(input);
-        },
         // Return the current stored statement as a string.
         check: function () {
           return statement.join(" ");
         },
         // Evaluate the current stored statement.
-        calculate: function () {
+        calculate: function (input) {
+          interpret(input);
+          // The input is now stored in the MathEngine as the statement.
+          if (!verify(statement)) {
+            return error('The supplied expression is not formatted correctly.');
+          }
           return evaluate(statement);
         }
       };
