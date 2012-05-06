@@ -19,22 +19,30 @@ define(
       // The current active statement.
       // @TODO this will eventually be an array.
       var statement = [];
+      // Number check.
+      var numberCheck = "[0-9]+\\.{0,1}[0-9]*";
+      var numberCheckReg = new RegExp(numberCheck);
+      // Operator check.
+      var operatorCheck = "[\\/\\*\\+\\-\\(\\)]{1}";
+      var operatorCheckReg = new RegExp(operatorCheck);
       // Input parsing regular expression.
       // [0-9]+\.{0,1}[0-9]* matches integers and decimals.
       // [\/\*\+\-\(\)] matches operators and parentheses.
       // the g flag is necessary to allow looping through the input with //.exec()
-      var chunker = /[0-9]+\.{0,1}[0-9]*|[\/\*\+\-\(\)]/g;
+      var statementChunkerReg = new RegExp(numberCheck + '|' + operatorCheck, 'g');
       // Integer vs. float parser. Returns a result for a float.
-      var floatCheck = /[0-9]+\.{1}[0-9]+/;
+      var floatCheckReg = /[0-9]+\.{1}[0-9]+/;
+      var parenCheckReg = /[\(\)]{1}/;
       // Private functions.
       function operate(operation, a, b) {
-        var i, nums = [a, b];
+        var i,
+        nums = [a, b],
+        result;
         // Create Numbers from the String arguments.
         for (i = 0; i < nums.length; i++ ) {
           // Create a float or int depending on the floatCheck result.
-          nums[i] = (floatCheck.exec(nums[i])) ? parseFloat(nums[i]) : parseInt(nums[i]);
+          nums[i] = (floatCheckReg.exec(nums[i])) ? parseFloat(nums[i]) : parseInt(nums[i]);
         }
-        var result;
         switch (operation) {
         case '+':
           result = nums[0] + nums[1];
@@ -46,6 +54,8 @@ define(
           result = nums[0] * nums[1];
           break;
         case '/':
+          // Check for division by zero and error out.
+          // @TODO Requires error handling.
           if (b.indexOf('0') === 0) {
             result = NaN;
           }
@@ -66,7 +76,7 @@ define(
       	var item, i = 0;
         // Loop through the regex exec function. input.length prevents the
         // while loop from executing for longer than the input is long.
-        while ((item = chunker.exec(input)) && i < input.length) {
+        while ((item = statementChunkerReg.exec(input)) && i < input.length) {
           statement.push(item[0]);
           i++;
         }
