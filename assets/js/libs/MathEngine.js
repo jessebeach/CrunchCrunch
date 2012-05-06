@@ -107,7 +107,9 @@ define(
         while (i < result.length) {
           result.splice((i - 1), 3, operate(result[i], result[i - 1], result[i + 1]));
         }
-        return result;
+        // Return the result as a string to remain consistent with the internal
+        // representation of the statement components.
+        return result.toString();
       }
       /**
        * Verify that the statement has the correct structure for evaluation.
