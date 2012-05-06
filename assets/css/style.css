@@ -213,6 +213,8 @@ body {
 	background-image: -webkit-linear-gradient(transparent, rgba(25,25,25,0.15));
 	border-radius: 5px;
 	box-shadow: 0 0 0 1px #c0c0c0, 0 0 0 3px #f0f0f0, 0 0 0 4px #d0d0d0;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	margin: 4px;
 	padding: 10px;
@@ -224,6 +226,8 @@ body {
 	float: left;
 }
 .calculator input {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	margin-bottom: 0.5rem;
 	padding: 3px;
@@ -231,27 +235,29 @@ body {
 	width: 100%;
 }
 .calculator .numpad {
-    width: 75%;
+  width: 60%;
 }
 .calculator .operations {
-	width: 25%;
+	width: 40%;
 }
 .calculator .numpad .button {
-    display: block;
-    float: left;
-    width: 33.3%;
+  display: block;
+  float: left;
+  width: 33.3%;
 }
 .calculator .operations .button {
-    display: block;
-    float: left;
-    width: 50%;
+  display: block;
+  float: left;
+  width: 50%;
 }
 .calculator .button {
-    box-sizing: border-box;
-    color: #0a0a0a;
-    padding: 6px;
-    text-align: center;
-    text-decoration: none;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #0a0a0a;
+  padding: 6px;
+  text-align: center;
+  text-decoration: none;
 }
 .calculator .button:hover {
 	text-decoration: none;
