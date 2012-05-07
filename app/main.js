@@ -11,80 +11,267 @@ require([
 ],
 
 function ($, MathEngine) {
-  // Number pad keys.
-  var numKeys = [
-  	48, // 0
-  	49, // 1
-  	50, // 2
-  	51, // 3
-  	52, // 4
-  	53, // 5
-  	54, // 6
-  	55, // 7
-  	56, // 8
-  	57 // 9
-    ];
-  // Operation pad keys.
-  var operationKeys = [
-  	13, // Enter
-  	40, // (
-  	41, // )
-  	42, // *
-  	43, // +
-  	45, // -
-  	47, // /
-  	61 // =
-    ];
+  // Calucation display bar.
+  var i,
+  // Temp objects for wrappers and clones.
+  temp,
+  $temp,
+  $calculator = $('.calculator'),
+  $display = $('.display'),
+  $numPad = $('.numpad'),
+  $operationsPad = $('.operations'),
+  $parenButtons = $('.paren'),
+  // The expression to be calculated and the result of the calculation.
+  expression = '',
+  result = '';
   // Instantiate a new MathEngine.
   var engine = new MathEngine();
-  /* DEVELOPING THE MATH ENGINE INPUT HANDLING */
-  // Calculate the current active statement.
-  console.log("MathEngine calculate: " + engine.calculate('(((3 * 3) + (3 * ((3 - 8) * 10))) + 2)'));
-  // Print the current active statement.
-  console.log("MathEngine check: " + eval(engine.check()));
+  // The calculator has methods for updating the application.
+  var calculator = {
+    scope: false,
+    append: function (symbol) {
+      expression += symbol;
+      $calculator.trigger('refresh');
+    },
+    toggleScope: function (symbol) {
+      this.scope = !this.scope;
+      expression += symbol;
+      $calculator
+      .trigger('scopeToggle')
+      .trigger('refresh');
+    },
+    calculate: function () {
+      result = engine.calculate(expression);
+      $calculator.trigger('refresh');
+    },
+    clear: function () {
+      $calculator.trigger('clear');
+    }
+  };
+  // Number pad keys.
+  var numKeys = [
+    {
+      key: 49,
+      text: '1',
+      callback: $.proxy(calculator.append, calculator, '1')
+    },
+    {
+      key: 50,
+      text: '2',
+      callback: $.proxy(calculator.append, calculator, '2')
+    },
+    {
+      key: 51,
+      text: '3',
+      callback: $.proxy(calculator.append, calculator, '3')
+    },
+    {
+      key: 52,
+      text: '4',
+      callback: $.proxy(calculator.append, calculator, '4')
+    },
+    {
+      key: 53,
+      text: '5',
+      callback: $.proxy(calculator.append, calculator, '5')
+    },
+    {
+      key: 54,
+      text: '6',
+      callback: $.proxy(calculator.append, calculator, '6')
+    },
+    {
+      key: 55,
+      text: '7',
+      callback: $.proxy(calculator.append, calculator, '7')
+    },
+    {
+      key: 56,
+      text: '8',
+      callback: $.proxy(calculator.append, calculator, '8')
+    },
+    {
+      key: 57,
+      text: '9',
+      callback: $.proxy(calculator.append, calculator, '9')
+    },
+    {
+      key: 46,
+      text: '.',
+      callback: $.proxy(calculator.append, calculator, '.')
+    },
+    {
+      key: 48,
+      text: '0',
+      callback: $.proxy(calculator.append, calculator, '0')
+    }
+  ];
+  // Operation pad keys.
+  var operationKeys = [
+    {
+      key: 40,
+      text: '(',
+      callback: $.proxy(calculator.toggleScope, calculator, '(')
+    },
+    {
+      key: 41,
+      text: ')',
+      callback: $.proxy(calculator.toggleScope, calculator, ')')
+    },
+    {
+      key: 43,
+      text: '+',
+      callback: $.proxy(calculator.append, calculator, '+')
+    },
+    {
+      key: 45,
+      text: '-',
+      callback: $.proxy(calculator.append, calculator, '-')
+    },
+    {
+      key: 42,
+      text: '*',
+      callback: $.proxy(calculator.append, calculator, '*')
+    },
+    {
+      key: 47,
+      text: '/',
+      callback: $.proxy(calculator.append, calculator, '/')
+    },
+    {
+      text: 'C',
+      callback: $.proxy(calculator.clear, calculator)
+    },
+    {
+      key: 61,
+      text: '=',
+      callback: $.proxy(calculator.calculate, calculator)
+    },
+    {
+      key: 13,
+      callback: $.proxy(calculator.calculate, calculator)
+    },
+    {
+      key: 8,
+      callback: $.proxy(calculator.clear, calculator)
+    }
+  ];
   /**
-   * Number pad handler.
+   * Handle button clicks.
    */
-  function numPadHandler(event) {
-    console.info('num pad handler');
-  }
-  /**
-   * Operation pad handler.
-   */
-  function operationPadHandler(event) {
-    console.info('op handler');
-  }
-  /**
-   * A general purpose function that checks allowed keys configured
-   * as part of the event handler registry and calls 
-   * the configured function if the triggering key is part of the allowed set.
-   * 
-   * event.data.keys (Array): The allowed keys
-   * event.data.fn (Function): The callback function
-   */
-  function keyManager(event) {
-    if ($.inArray(event.charCode, event.data.keys) > -1) {
-      event.data.fn(event);
+  function clickHandler(event) {
+    event.preventDefault();
+    var data = $(this).data('calculator') || {};
+    if ('callback' in data && $.isFunction(data.callback)) {
+      data.callback();
     }
   }
+  /**
+   * Handle key clicks.
+   */
+  function keyHandler(event) {
+    // Prevent the delete/backspace button from navigation off the page.
+    if (event.keyCode === 8 && event.type === 'keydown') {
+      event.preventDefault();
+    }
+    if(event.type === 'keypress' || (event.keyCode === 8 && event.type === 'keydown')) {
+      var keys = [].concat(numKeys, operationKeys);
+      for (var key in keys) {
+        if (keys.hasOwnProperty(key)) {
+          if ('key' in keys[key] && 'callback' in keys[key]) {
+            if (event.keyCode === keys[key].key) {
+              keys[key].callback();
+              return;
+            }
+          }
+        }
+      }
+    }
+  }
+  /**
+   * Clears the calculator.
+   */
+  function clear(all) {
+    result = expression = '';
+  }
+  /**
+   * Update the user input textfield and button states.
+   */
+  function updateDisplay(event) {
+    if (result.length > 0) {
+      $display.val(result);
+    }
+    else if (expression.length > 0) {
+      $display.val(expression);
+    }
+    else {
+      $display.val('');
+    }
+  }
+  // Build the number pad.
+  // This could probably be pulled into its own sub-module.
+  for (var key in numKeys) {
+    if (numKeys.hasOwnProperty(key)) {
+      // Create the individual number pad buttons.
+      $('<a>', {
+        href: '#',
+        html: $('<span>', {
+          text: numKeys[key].text
+        })
+      })
+      .data('calculator', {
+        key: numKeys[key].key,
+        callback: numKeys[key].callback
+      })
+      .addClass('button')
+      .appendTo($numPad);
+    }
+  };
+  // Build the operations pad.
+  // This could probably be pulled into its own sub-module.
+  for (var key in operationKeys) {
+    if (operationKeys.hasOwnProperty(key)) {
+      if ('text' in operationKeys[key]) {
+        // Create the individual number pad buttons.
+        $('<a>', {
+          href: '#',
+          html: $('<span>', {
+            text: operationKeys[key].text
+          })
+        })
+        .data('calculator', {
+          key: operationKeys[key].key,
+          callback: operationKeys[key].callback
+        })
+        .addClass('button')
+        .appendTo($operationsPad);
+      }
+    }
+  };
+  
+  // Define compound callbacks.
+	var displayClearCallbacks = $.Callbacks();
+	displayClearCallbacks.add(clear);
+	displayClearCallbacks.add(updateDisplay);
+
   // Attach UI event handlers.
-  $('.calculator')
+  $calculator
   // Capture number clicks.
   .on({
-    'click': numPadHandler
-  }, '.numpad a')
-  // Capture operation key clicks.
+    'click': clickHandler
+  }, '.button')
+  // Update the state of the UI.
   .on({
-    'click': operationPadHandler
-  }, '.operations a');
+    'refresh': updateDisplay
+  })
+  // Show the result of a calculation.
+  .on({
+    'clear': displayClearCallbacks.fire
+  });
   // Capture key presses.
   $(document)
-  // Capture number key presses.
   .on({
-    'keypress': keyManager
-  }, {fn: numPadHandler, keys: numKeys})
-  // Capture operation key presses.
-  .on({
-    'keypress': keyManager
-  }, {fn: operationPadHandler, keys: operationKeys});
+    'keypress': keyHandler,
+    'keydown': keyHandler
+  });
 });
