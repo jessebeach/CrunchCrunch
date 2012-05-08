@@ -38,9 +38,9 @@ define(
         nums = [a, b],
         result;
         // Create Numbers from the String arguments.
-        for (i = 0; i < nums.length; i++ ) {
+        for (i = 0; i < nums.length; i++) {
           // Create a float or int depending on the floatCheck result.
-          nums[i] = (floatCheckReg.exec(nums[i])) ? parseFloat(nums[i]) : parseInt(nums[i]);
+          nums[i] = (floatCheckReg.exec(nums[i])) ? parseFloat(nums[i]) : parseInt(nums[i], 10);
         }
         switch (operation) {
         case '+':
@@ -65,14 +65,14 @@ define(
           break;
         }
         return result.toString();
-          
       }
       /**
        * Parse the user-provided string so that it can be
        * evaluated as a mathematic expression.
        */
       function interpret(input) {
-      	var item, i = 0;
+        var item,
+        i = 0;
         // Loop through the regex exec function. input.length prevents the
         // while loop from executing for longer than the input is long.
         while ((item = expressionChunkerReg.exec(input)) && i < input.length) {
@@ -92,7 +92,7 @@ define(
        */
       function evaluate(expression) {
         var i = 1,
-        temp= [];
+        temp = [];
         // Evaluate all the multiplication and division first.
         while (i < expression.length) {
           // The end of the context is reached.

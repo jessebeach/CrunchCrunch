@@ -17,12 +17,14 @@ function ($, MathEngine) {
   $display = $('.display'),
   $numPad = $('.numpad'),
   $operationsPad = $('.operations'),
+  key,
   // The expression to be calculated and the result of the calculation.
   expression = '',
   result = '';
   // Instantiate a new MathEngine.
   var engine = new MathEngine();
   // The calculator has methods for updating the application.
+  // These methods mostly trigger events.
   var calculator = {
     scope: false,
     append: function (symbol) {
@@ -179,7 +181,7 @@ function ($, MathEngine) {
     }
     // Just respond to one of the register key events. In the case of the backspace,
     // this must be the keydown event.
-    if(event.type === 'keypress' || (event.which === 8 && event.type === 'keydown')) {
+    if (event.type === 'keypress' || (event.which === 8 && event.type === 'keydown')) {
       var keys = [].concat(numKeys, operationKeys);
       for (var key in keys) {
         if (keys.hasOwnProperty(key)) {
@@ -214,7 +216,7 @@ function ($, MathEngine) {
   }
   // Build the number pad.
   // This could probably be pulled into its own sub-module.
-  for (var key in numKeys) {
+  for (key in numKeys) {
     if (numKeys.hasOwnProperty(key)) {
       // Create the individual number pad buttons.
       $('<a>', {
@@ -230,10 +232,10 @@ function ($, MathEngine) {
       .addClass('button')
       .appendTo($numPad);
     }
-  };
+  }
   // Build the operations pad.
   // This could probably be pulled into its own sub-module.
-  for (var key in operationKeys) {
+  for (key in operationKeys) {
     if (operationKeys.hasOwnProperty(key)) {
       if ('text' in operationKeys[key]) {
         // Create the individual number pad buttons.
@@ -251,12 +253,12 @@ function ($, MathEngine) {
         .appendTo($operationsPad);
       }
     }
-  };
+  }
   
   // Define compound callbacks.
-	var displayClearCallbacks = $.Callbacks();
-	displayClearCallbacks.add(clear);
-	displayClearCallbacks.add(updateDisplay);
+  var displayClearCallbacks = $.Callbacks();
+  displayClearCallbacks.add(clear);
+  displayClearCallbacks.add(updateDisplay);
 
   // Attach UI event handlers.
   $calculator
