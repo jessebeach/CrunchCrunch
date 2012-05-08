@@ -174,17 +174,18 @@ function ($, MathEngine) {
    */
   function keyHandler(event) {
     // Prevent the delete/backspace button from navigation off the page.
-    if (event.keyCode === 8 && event.type === 'keydown') {
+    if (event.which === 8 && event.type === 'keydown') {
       event.preventDefault();
     }
-    if(event.type === 'keypress' || (event.keyCode === 8 && event.type === 'keydown')) {
+    // Just respond to one of the register key events. In the case of the backspace,
+    // this must be the keydown event.
+    if(event.type === 'keypress' || (event.which === 8 && event.type === 'keydown')) {
       var keys = [].concat(numKeys, operationKeys);
       for (var key in keys) {
         if (keys.hasOwnProperty(key)) {
           if ('key' in keys[key] && 'callback' in keys[key]) {
-            if (event.keyCode === keys[key].key) {
+            if (event.which === keys[key].key) {
               keys[key].callback();
-              return;
             }
           }
         }
