@@ -42,7 +42,7 @@ function ($, MathEngine) {
     },
     toggleScope: function (symbol) {
       this.scope = !this.scope;
-      expression += symbol;
+      this.append(symbol);
       $calculator
       .trigger('scopeToggle')
       .trigger('refresh');

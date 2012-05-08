@@ -17,7 +17,6 @@ define(
     // Return a function so that the 'new' operator can be used.
     return function () {
       // The current active expression.
-      // @TODO this will eventually be an array.
       var expression = [];
       // Number check.
       var numberCheck = "\\-?[0-9]+\\.?[0-9]*";
@@ -171,6 +170,8 @@ define(
         },
         // Evaluate the current stored expression.
         calculate: function (input) {
+          // Reset the expression variable.
+          expression = [];
           interpret(input);
           // The input is now stored in the MathEngine as the expression.
           if (!verify(expression)) {
