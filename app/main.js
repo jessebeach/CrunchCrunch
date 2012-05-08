@@ -13,14 +13,10 @@ require([
 function ($, MathEngine) {
   // Calucation display bar.
   var i,
-  // Temp objects for wrappers and clones.
-  temp,
-  $temp,
   $calculator = $('.calculator'),
   $display = $('.display'),
   $numPad = $('.numpad'),
   $operationsPad = $('.operations'),
-  $parenButtons = $('.paren'),
   // The expression to be calculated and the result of the calculation.
   expression = '',
   result = '';
@@ -265,20 +261,20 @@ function ($, MathEngine) {
   $calculator
   // Capture number clicks.
   .on({
-    'click': clickHandler
+    'click.calculator': clickHandler
   }, '.button')
   // Update the state of the UI.
   .on({
-    'refresh': updateDisplay
+    'refresh.calculator': updateDisplay
   })
   // Show the result of a calculation.
   .on({
-    'clear': displayClearCallbacks.fire
+    'clear.calculator': displayClearCallbacks.fire
   });
   // Capture key presses.
   $(document)
   .on({
-    'keypress': keyHandler,
-    'keydown': keyHandler
+    'keypress.calculator': keyHandler,
+    'keydown.calculator': keyHandler
   });
 });

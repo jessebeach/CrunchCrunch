@@ -210,7 +210,9 @@ body {
 
 .calculator {
 	background-color: #e0e0e0;
+	background-image: -moz-linear-gradient(transparent, rgba(25,25,25,0.15));
 	background-image: -webkit-linear-gradient(transparent, rgba(25,25,25,0.15));
+	background-image: linear-gradient(transparent, rgba(25,25,25,0.15));
 	border-radius: 5px;
 	box-shadow: 0 0 0 1px #c0c0c0, 0 0 0 3px #f0f0f0, 0 0 0 4px #d0d0d0;
 	-moz-box-sizing: border-box;
@@ -271,14 +273,18 @@ body {
 .calculator .button.toggle span,
 .calculator .button.toggle:hover span,
 .calculator .button.toggle:active span {
+  background-image: -moz-linear-gradient(rgba(50,50,50,0.25), rgba(50,50,50,0.25));
   background-image: -webkit-linear-gradient(rgba(50,50,50,0.25), rgba(50,50,50,0.25));
+  background-image: linear-gradient(rgba(50,50,50,0.25), rgba(50,50,50,0.25));
   box-shadow: 1px 1px 0px 0 white inset;
   text-shadow: 0 1px 0px white;
 }
 .calculator .button span,
 .calculator .button.toggle.active span {
   background-color: lightblue;
+  background-image: -moz-linear-gradient(transparent, rgba(25,25,25,0.15));
   background-image: -webkit-linear-gradient(transparent, rgba(25,25,25,0.15));
+  background-image: linear-gradient(transparent, rgba(25,25,25,0.15));
   border: 1px solid #666;
   border-radius: 3px;
   box-shadow: 1px 1px 0px 0 white inset;
