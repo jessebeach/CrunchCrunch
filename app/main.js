@@ -30,7 +30,14 @@ function ($, MathEngine) {
   var calculator = {
     scope: false,
     append: function (symbol) {
-      expression += symbol;
+      var sym = $.trim(symbol);
+      var isDigit = /[\d\.]{1}/.exec(sym);
+      // Get the last character of the expression.
+      // It will determine if a preceding space is needed.
+      var lastChar = expression.charAt((expression.length - 1));
+      var isLastCharDigit = /[\d\.]{1}/.exec(lastChar);
+      var spacer = (isDigit && isLastCharDigit) ? "" : " ";
+      expression += spacer + sym;
       $calculator.trigger('refresh');
     },
     toggleScope: function (symbol) {
